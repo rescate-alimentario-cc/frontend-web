@@ -6,12 +6,6 @@
   --senal: #a33a22;
   --linea: #d3d6ce;
   --tenue: #5e675f;
-
-  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-
-  color-scheme: light;
 }
 
 *,
