@@ -12,9 +12,9 @@ export class ApiError extends Error {
 }
 
 /**
- * Las EC2 del Learner Lab pueden estar apagadas. Sin timeout, una peticion a un
- * backend caido deja la pantalla girando para siempre. 8 segundos es suficiente
- * para el arranque frio de Spring Boot detras del ALB.
+ * Las EC2 del Learner Lab pueden estar apagadas. Sin timeout, una petición a un
+ * backend caído deja la pantalla girando para siempre. 8 segundos es suficiente
+ * para el arranque frío de Spring Boot detrás del ALB.
  */
 const TIMEOUT_MS = 8000
 
@@ -23,7 +23,7 @@ async function request<T>(ruta: string, init?: RequestInit): Promise<T> {
     throw new ApiError(
       'Falta configurar VITE_API_BASE_URL',
       0,
-      'Crea un archivo .env.local en la raiz del proyecto con la URL del API Gateway.',
+      'Crea un archivo .env.local en la raíz del proyecto con la URL del API Gateway.',
     )
   }
 
@@ -52,9 +52,9 @@ async function request<T>(ruta: string, init?: RequestInit): Promise<T> {
     if (error instanceof ApiError) throw error
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new ApiError(
-        'El servidor no respondio a tiempo',
+        'El servidor no respondió a tiempo',
         0,
-        'Revisa que el laboratorio de AWS este encendido y las instancias en ejecucion.',
+        'Revisa que el laboratorio de AWS esté encendido y las instancias en ejecución.',
       )
     }
     throw new ApiError(
@@ -68,11 +68,11 @@ async function request<T>(ruta: string, init?: RequestInit): Promise<T> {
 }
 
 function mensajePorEstado(status: number): string {
-  if (status === 400) return 'Los datos enviados no son validos'
-  if (status === 404) return 'No se encontro el recurso'
-  if (status === 409) return 'Ya existe una organizacion con ese RUC'
-  if (status === 502 || status === 503) return 'El microservicio no esta respondiendo'
-  if (status === 504) return 'El microservicio tardo demasiado'
+  if (status === 400) return 'Los datos enviados no son válidos'
+  if (status === 404) return 'No se encontró el recurso'
+  if (status === 409) return 'Ya existe una organización con ese RUC'
+  if (status === 502 || status === 503) return 'El microservicio no está respondiendo'
+  if (status === 504) return 'El microservicio tardó demasiado'
   return `Error ${status} del servidor`
 }
 

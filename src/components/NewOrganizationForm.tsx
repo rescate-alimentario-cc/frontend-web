@@ -66,7 +66,7 @@ export function NewOrganizationForm({ onCreada, onCancelar }: Props) {
 
   return (
     <div className="formulario">
-      <h2>Registrar organizacion</h2>
+      <h2>Registrar organización</h2>
       <p>
         Los donantes publican excedentes; las ONG los solicitan. El RUC no puede
         repetirse.
@@ -78,7 +78,7 @@ export function NewOrganizationForm({ onCreada, onCancelar }: Props) {
           <input
             value={datos.nombre}
             onChange={(e) => actualizar('nombre', e.target.value)}
-            placeholder="Panaderia San Antonio"
+            placeholder="Panadería San Antonio"
           />
         </label>
 
@@ -94,7 +94,7 @@ export function NewOrganizationForm({ onCreada, onCancelar }: Props) {
         </label>
 
         <label className="campo">
-          <span>Categoria</span>
+          <span>Categoría</span>
           <select
             value={datos.categoria}
             onChange={(e) => actualizar('categoria', e.target.value)}
@@ -108,7 +108,7 @@ export function NewOrganizationForm({ onCreada, onCancelar }: Props) {
         </label>
 
         <label className="campo">
-          <span>RUC (11 digitos)</span>
+          <span>RUC (11 dígitos)</span>
           <input
             value={datos.ruc}
             inputMode="numeric"
@@ -131,7 +131,7 @@ export function NewOrganizationForm({ onCreada, onCancelar }: Props) {
         </label>
 
         <label className="campo">
-          <span>Telefono</span>
+          <span>Teléfono</span>
           <input
             value={datos.telefono}
             onChange={(e) => actualizar('telefono', e.target.value)}
@@ -149,13 +149,13 @@ export function NewOrganizationForm({ onCreada, onCancelar }: Props) {
 
       <div className="formulario__acciones">
         <button className="boton" onClick={guardar} disabled={!puedeGuardar}>
-          {enviando ? 'Guardando...' : 'Guardar organizacion'}
+          {enviando ? 'Guardando…' : 'Guardar organización'}
         </button>
         <button className="boton boton--secundario" onClick={onCancelar}>
           Cancelar
         </button>
         {!rucValido && datos.ruc.length > 0 && (
-          <span className="conteo">El RUC debe tener 11 digitos</span>
+          <span className="conteo">El RUC debe tener 11 dígitos</span>
         )}
       </div>
     </div>

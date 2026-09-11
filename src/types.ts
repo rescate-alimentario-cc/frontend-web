@@ -45,9 +45,9 @@ export interface NuevaOrganizacion {
 }
 
 /**
- * MS1 es Spring Boot con JPA. Segun como mapearon las entidades, el JSON puede
+ * MS1 es Spring Boot con JPA. Según cómo mapearon las entidades, el JSON puede
  * llegar como organizacion_id o como organizacionId. En vez de apostar por una
- * forma y romper el dia de la demo, leemos las dos.
+ * forma y romper el día de la demo, leemos las dos.
  */
 function leer<T>(fuente: Record<string, unknown>, ...claves: string[]): T | null {
   for (const clave of claves) {

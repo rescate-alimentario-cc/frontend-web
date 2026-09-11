@@ -1,11 +1,17 @@
 :root {
-  --papel: #f1f2ee;
-  --tinta: #17241e;
-  --verde: #2f6b4b;
-  --verde-claro: #e3ebe4;
-  --senal: #a33a22;
-  --linea: #d3d6ce;
-  --tenue: #5e675f;
+  --papel: #eceee7;
+  --tinta: #10201a;
+  --verde: #26563c;
+  --verde-claro: #dbe4db;
+  --senal: #8f3a20;
+  --linea: #cbd0c6;
+  --tenue: #55605a;
+
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+
+  color-scheme: light;
 }
 
 *,
@@ -272,13 +278,13 @@ select {
 
 .etiqueta--ong {
   background: var(--verde-claro);
-  border-color: #c3d5c7;
-  color: #1f4a34;
+  border-color: #b9c9bc;
+  color: #1c4431;
 }
 
 .etiqueta--inactivo {
   color: var(--senal);
-  border-color: #e0c3ba;
+  border-color: #d8beb4;
 }
 
 .boton-sedes {
@@ -310,7 +316,7 @@ select {
 .sedes li {
   font-size: 14px;
   padding-left: 14px;
-  border-left: 2px solid var(--verde-claro);
+  border-left: 2px solid #c2d2c4;
 }
 
 .sedes__distrito {

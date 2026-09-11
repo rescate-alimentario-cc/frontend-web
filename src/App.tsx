@@ -7,10 +7,10 @@ import { NewOrganizationForm } from './components/NewOrganizationForm'
 import type { Organizacion } from './types'
 
 /**
- * MS1 todavia no pagina, asi que cuando P4 cargue las 20,000 organizaciones
- * este listado llegaria completo. Recortamos en el cliente para no congelar el
+ * MS1 todavía no pagina, así que cuando P4 cargue las 20,000 organizaciones
+ * este listado llegaría completo. Recortamos en el cliente para no congelar el
  * navegador durante la demo. Cuando el backend acepte ?page= y ?size= hay que
- * mover el recorte alla.
+ * mover el recorte allá.
  */
 const LIMITE_VISIBLE = 50
 
@@ -63,8 +63,8 @@ export default function App() {
         <header className="encabezado">
           <h1>Red de rescate alimentario</h1>
           <p>
-            Padron de donantes y organizaciones receptoras. Los donantes publican
-            excedentes proximos a vencer y las ONG los reservan para su reparto.
+            Padrón de donantes y organizaciones receptoras. Los donantes publican
+            excedentes próximos a vencer y las ONG los reservan para su reparto.
           </p>
         </header>
 
@@ -74,7 +74,7 @@ export default function App() {
             <input
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              placeholder="Panaderia, 20100..."
+              placeholder="Panadería, 20100…"
             />
           </label>
 
@@ -105,7 +105,7 @@ export default function App() {
                 setMensaje(null)
               }}
             >
-              Registrar organizacion
+              Registrar organización
             </button>
           )}
         </div>
@@ -134,7 +134,7 @@ export default function App() {
           </div>
         )}
 
-        {cargando && <p className="cargando">Consultando el padron...</p>}
+        {cargando && <p className="cargando">Consultando el padrón…</p>}
 
         {!cargando && !error && filtradas.length === 0 && (
           <p className="vacio">
@@ -148,7 +148,7 @@ export default function App() {
             <p className="conteo">
               Mostrando {visibles.length} de {filtradas.length} organizaciones
               {filtradas.length > LIMITE_VISIBLE
-                ? '. El listado completo se recorta hasta que el servicio acepte paginacion.'
+                ? '. El listado completo se recorta hasta que el servicio acepte paginación.'
                 : '.'}
             </p>
           </>

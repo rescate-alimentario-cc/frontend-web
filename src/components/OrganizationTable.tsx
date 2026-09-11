@@ -36,7 +36,7 @@ export function OrganizationTable({ organizaciones }: Props) {
           <th>ID</th>
           <th>Nombre</th>
           <th>Tipo</th>
-          <th>Categoria</th>
+          <th>Categoría</th>
           <th>RUC</th>
           <th>Contacto</th>
           <th>Sedes</th>
@@ -90,12 +90,12 @@ export function OrganizationTable({ organizaciones }: Props) {
               {expandida === organizacion.organizacionId && (
                 <tr className="sedes">
                   <td colSpan={7}>
-                    {detalle === 'cargando' && <span>Cargando sedes...</span>}
+                    {detalle === 'cargando' && <span>Cargando sedes…</span>}
                     {detalle === 'error' && (
                       <span>No se pudieron cargar las sedes.</span>
                     )}
                     {Array.isArray(detalle) && detalle.length === 0 && (
-                      <span>Esta organizacion aun no tiene sedes registradas.</span>
+                      <span>Esta organización aún no tiene sedes registradas.</span>
                     )}
                     {Array.isArray(detalle) && detalle.length > 0 && (
                       <ul>

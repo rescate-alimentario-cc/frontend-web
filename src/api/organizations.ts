@@ -10,9 +10,9 @@ import {
 type Crudo = Record<string, unknown>
 
 /**
- * MS1 todavia no pagina. Si devuelve un objeto { items, total } lo respetamos,
- * y si devuelve un arreglo plano lo tomamos tal cual. Asi el dia que P2 agregue
- * paginacion no hay que reescribir nada aqui.
+ * MS1 todavía no pagina. Si devuelve un objeto { items, total } lo respetamos,
+ * y si devuelve un arreglo plano lo tomamos tal cual. Así el día que P2 agregue
+ * paginación no hay que reescribir nada aquí.
  */
 function extraerLista(respuesta: unknown): Crudo[] {
   if (Array.isArray(respuesta)) return respuesta as Crudo[]

@@ -18,8 +18,8 @@ export function StatusBar() {
   }, [])
 
   const texto = {
-    consultando: 'Verificando conexion',
-    activo: 'Backend en linea',
+    consultando: 'Verificando conexión',
+    activo: 'Backend en línea',
     caido: 'Backend sin respuesta',
   }[estado]
 
