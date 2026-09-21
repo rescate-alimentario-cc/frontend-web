@@ -1,68 +1,23 @@
-import { api } from './client'
-import {
-  normalizarOrganizacion,
-  normalizarSede,
-  type NuevaOrganizacion,
-  type Organizacion,
-  type Sede,
-} from '../types'
-
-type Crudo = Record<string, unknown>
-
-/**
- * MS1 todavía no pagina. Si devuelve un objeto { items, total } lo respetamos,
- * y si devuelve un arreglo plano lo tomamos tal cual. Así el día que P2 agregue
- * paginación no hay que reescribir nada aquí.
- */
-function extraerLista(respuesta: unknown): Crudo[] {
-  if (Array.isArray(respuesta)) return respuesta as Crudo[]
-  if (respuesta && typeof respuesta === 'object') {
-    const objeto = respuesta as Crudo
-    for (const clave of ['items', 'content', 'data', 'results']) {
-      if (Array.isArray(objeto[clave])) return objeto[clave] as Crudo[]
-    }
-  }
-  return []
-}
+import { api, query } from './client'
+import type { NuevaOrganizacion, NuevaSede, Organizacion, Sede } from '../types'
 
 export interface FiltroOrganizaciones {
   tipo?: string
   activo?: string
+  q?: string
+  page?: number
+  limit?: number
 }
 
-export async function listarOrganizaciones(
-  filtro: FiltroOrganizaciones = {},
-): Promise<Organizacion[]> {
-  const parametros = new URLSearchParams()
-  if (filtro.tipo) parametros.set('tipo', filtro.tipo)
-  if (filtro.activo) parametros.set('activo', filtro.activo)
-
-  const cadena = parametros.toString()
-  const respuesta = await api.get<unknown>(
-    `/organizations${cadena ? `?${cadena}` : ''}`,
+export async function listarOrganizaciones(filtro: FiltroOrganizaciones = {}) {
+  const { data, total } = await api.getPage<Organizacion>(
+    `/organizations${query({ limit: 20, ...filtro })}`,
   )
-  return extraerLista(respuesta).map(normalizarOrganizacion)
+  return { items: data, total }
 }
 
-export async function crearOrganizacion(
-  datos: NuevaOrganizacion,
-): Promise<Organizacion> {
-  const respuesta = await api.post<Crudo>('/organizations', datos)
-  return normalizarOrganizacion(respuesta)
-}
-
-export async function listarSedes(organizacionId: number): Promise<Sede[]> {
-  const respuesta = await api.get<unknown>(
-    `/organizations/${organizacionId}/sites`,
-  )
-  return extraerLista(respuesta).map(normalizarSede)
-}
-
-export async function consultarSalud(): Promise<boolean> {
-  try {
-    await api.get<unknown>('/health')
-    return true
-  } catch {
-    return false
-  }
-}
+export const obtenerOrganizacion = (id: number) => api.get<Organizacion>(`/organizations/${id}`)
+export const crearOrganizacion = (datos: NuevaOrganizacion) => api.post<Organizacion>('/organizations', datos)
+export const listarSedes = (id: number) => api.get<Sede[]>(`/organizations/${id}/sites`)
+export const crearSede = (id: number, datos: NuevaSede) => api.post<Sede>(`/organizations/${id}/sites`, datos)
+export const consultarSalud = () => api.get<{ status: string }>('/health')

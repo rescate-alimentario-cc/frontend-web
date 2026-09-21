@@ -11,20 +11,40 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Las EC2 del Learner Lab pueden estar apagadas. Sin timeout, una petición a un
- * backend caído deja la pantalla girando para siempre. 8 segundos es suficiente
- * para el arranque frío de Spring Boot detrás del ALB.
- */
-const TIMEOUT_MS = 8000
+/** Athena tarda unos segundos en frío; el resto responde en menos de uno. */
+const TIMEOUT_MS = 30_000
 
-async function request<T>(ruta: string, init?: RequestInit): Promise<T> {
+export interface Respuesta<T> {
+  data: T
+  /** Total de registros según la cabecera X-Total-Count; null si el servicio no la envía. */
+  total: number | null
+}
+
+function extraerMensaje(texto: string): string | undefined {
+  try {
+    const json = JSON.parse(texto) as Record<string, unknown>
+    const valor = json.detail ?? json.error ?? json.message
+    if (typeof valor === 'string') return valor
+    if (Array.isArray(valor)) return valor.map((v) => (typeof v === 'string' ? v : JSON.stringify(v))).join('; ')
+  } catch {
+    /* no era JSON */
+  }
+  return texto.slice(0, 200) || undefined
+}
+
+function mensajePorEstado(status: number, detalle?: string): string {
+  if (detalle && status >= 400 && status < 500) return detalle
+  if (status === 404) return 'No se encontró el recurso'
+  if (status === 409) return 'El registro ya existe'
+  if (status === 413) return 'La respuesta es demasiado grande: usa filtros o paginación'
+  if (status === 502 || status === 503) return 'El microservicio no está respondiendo'
+  if (status === 504) return 'El microservicio tardó demasiado'
+  return `Error ${status} del servidor`
+}
+
+async function request<T>(ruta: string, init?: RequestInit): Promise<Respuesta<T>> {
   if (!BASE_URL) {
-    throw new ApiError(
-      'Falta configurar VITE_API_BASE_URL',
-      0,
-      'Crea un archivo .env.local en la raíz del proyecto con la URL del API Gateway.',
-    )
+    throw new ApiError('Falta configurar VITE_API_BASE_URL', 0, 'Define la URL del API Gateway en .env.local o en Amplify.')
   }
 
   const controlador = new AbortController()
@@ -36,50 +56,43 @@ async function request<T>(ruta: string, init?: RequestInit): Promise<T> {
       signal: controlador.signal,
       headers: { 'Content-Type': 'application/json', ...init?.headers },
     })
-
     const texto = await respuesta.text()
 
     if (!respuesta.ok) {
-      throw new ApiError(
-        mensajePorEstado(respuesta.status),
-        respuesta.status,
-        texto.slice(0, 300),
-      )
+      const detalle = extraerMensaje(texto)
+      throw new ApiError(mensajePorEstado(respuesta.status, detalle), respuesta.status, detalle)
     }
 
-    return texto ? (JSON.parse(texto) as T) : ({} as T)
+    const total = respuesta.headers.get('x-total-count')
+    return { data: (texto ? JSON.parse(texto) : {}) as T, total: total === null ? null : Number(total) }
   } catch (error) {
     if (error instanceof ApiError) throw error
     if (error instanceof DOMException && error.name === 'AbortError') {
-      throw new ApiError(
-        'El servidor no respondió a tiempo',
-        0,
-        'Revisa que el laboratorio de AWS esté encendido y las instancias en ejecución.',
-      )
+      throw new ApiError('El servidor no respondió a tiempo', 0, 'Revisa que el laboratorio de AWS esté encendido.')
     }
-    throw new ApiError(
-      'No se pudo conectar con el API Gateway',
-      0,
-      'Puede ser el laboratorio apagado o un bloqueo de CORS. Abre la consola del navegador para ver el detalle.',
-    )
+    throw new ApiError('No se pudo conectar con el API Gateway', 0, 'Puede ser el laboratorio apagado o un bloqueo de CORS.')
   } finally {
     clearTimeout(temporizador)
   }
 }
 
-function mensajePorEstado(status: number): string {
-  if (status === 400) return 'Los datos enviados no son válidos'
-  if (status === 404) return 'No se encontró el recurso'
-  if (status === 409) return 'Ya existe una organización con ese RUC'
-  if (status === 502 || status === 503) return 'El microservicio no está respondiendo'
-  if (status === 504) return 'El microservicio tardó demasiado'
-  return `Error ${status} del servidor`
+export function query(parametros: Record<string, string | number | boolean | undefined | null>): string {
+  const p = new URLSearchParams()
+  for (const [clave, valor] of Object.entries(parametros)) {
+    if (valor !== undefined && valor !== null && valor !== '') p.set(clave, String(valor))
+  }
+  const cadena = p.toString()
+  return cadena ? `?${cadena}` : ''
 }
 
 export const api = {
-  get: <T>(ruta: string) => request<T>(ruta),
-  post: <T>(ruta: string, cuerpo: unknown) =>
-    request<T>(ruta, { method: 'POST', body: JSON.stringify(cuerpo) }),
+  get: async <T>(ruta: string) => (await request<T>(ruta)).data,
+  /** GET de un listado paginado: devuelve los datos y el total. */
+  getPage: <T>(ruta: string) => request<T[]>(ruta),
+  post: async <T>(ruta: string, cuerpo: unknown) =>
+    (await request<T>(ruta, { method: 'POST', body: JSON.stringify(cuerpo) })).data,
+  patch: async <T>(ruta: string, cuerpo: unknown) =>
+    (await request<T>(ruta, { method: 'PATCH', body: JSON.stringify(cuerpo) })).data,
 }
 
 export const apiBaseUrl = BASE_URL
