@@ -2,7 +2,7 @@ import { Bar, BarChart, CartesianGrid, Cell, Legend, ResponsiveContainer, XAxis,
 import { Download, RefreshCw } from 'lucide-react'
 import { impactoPorDistrito, riesgoVencimiento, tiemposLogisticos, topDonantes } from '../api/analytics'
 import { useAsync } from '../hooks/useAsync'
-import { COLORES, TarjetaGrafico, TooltipTema, ejeTexto } from '../components/charts'
+import { ANIMAR, COLORES, TarjetaGrafico, TooltipTema, ejeTexto } from '../components/charts'
 import { Cargando, Encabezado, ErrorCaja, Vacio } from '../components/ui'
 import { descargarCsv, etiqueta, fmtCompacto, fmtDec, fmtNum } from '../lib/format'
 
@@ -38,7 +38,7 @@ export default function Analitica() {
                   <XAxis dataKey="distrito" tick={ejeTexto} interval={0} angle={-40} textAnchor="end" height={70} axisLine={false} tickLine={false} />
                   <YAxis tick={ejeTexto} tickFormatter={fmtCompacto} axisLine={false} tickLine={false} width={52} />
                   <TooltipTema sufijo=" kg" />
-                  <Bar dataKey="kg_rescatados" name="Kg rescatados" fill="var(--c1)" radius={[6, 6, 0, 0]} />
+                  <Bar isAnimationActive={ANIMAR} dataKey="kg_rescatados" name="Kg rescatados" fill="var(--c1)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -56,9 +56,9 @@ export default function Analitica() {
                     <YAxis type="category" dataKey="categoria" width={110} tick={ejeTexto} axisLine={false} tickLine={false} />
                     <TooltipTema sufijo=" lotes" />
                     <Legend wrapperStyle={{ fontSize: 12, color: 'var(--muted)' }} />
-                    <Bar dataKey="lotes_vencidos" name="Vencidos" stackId="a" fill="var(--c4)" />
-                    <Bar dataKey="lotes_por_vencer_5d" name="Vencen en 5 días" stackId="a" fill="var(--c2)" />
-                    <Bar dataKey="otros" name="Con más de 5 días" stackId="a" fill="var(--c1)" radius={[0, 6, 6, 0]} />
+                    <Bar isAnimationActive={ANIMAR} dataKey="lotes_vencidos" name="Vencidos" stackId="a" fill="var(--c4)" />
+                    <Bar isAnimationActive={ANIMAR} dataKey="lotes_por_vencer_5d" name="Vencen en 5 días" stackId="a" fill="var(--c2)" />
+                    <Bar isAnimationActive={ANIMAR} dataKey="otros" name="Con más de 5 días" stackId="a" fill="var(--c1)" radius={[0, 6, 6, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -74,7 +74,7 @@ export default function Analitica() {
                     <XAxis type="number" tick={ejeTexto} axisLine={false} tickLine={false} unit=" h" />
                     <YAxis type="category" dataKey="categoria" width={110} tick={ejeTexto} axisLine={false} tickLine={false} />
                     <TooltipTema formato={fmtDec} sufijo=" h" />
-                    <Bar dataKey="horas_promedio_atencion" name="Horas promedio" radius={[0, 6, 6, 0]} maxBarSize={24}>
+                    <Bar isAnimationActive={ANIMAR} dataKey="horas_promedio_atencion" name="Horas promedio" radius={[0, 6, 6, 0]} maxBarSize={24}>
                       {tiemposDatos.map((_, i) => <Cell key={i} fill={COLORES[i % COLORES.length]} />)}
                     </Bar>
                   </BarChart>

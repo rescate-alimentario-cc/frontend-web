@@ -4,7 +4,7 @@ import { ArrowRight, HeartHandshake, PackageCheck, RefreshCw, Scale, Store, Uten
 import { impactoPorDistrito, resumenImpacto, riesgoVencimiento } from '../api/analytics'
 import { listarEntregas } from '../api/traceability'
 import { useAsync } from '../hooks/useAsync'
-import { COLORES, TarjetaGrafico, TooltipTema, ejeTexto } from '../components/charts'
+import { ANIMAR, COLORES, TarjetaGrafico, TooltipTema, ejeTexto } from '../components/charts'
 import { Cargando, Encabezado, ErrorCaja, KpiCard, Vacio } from '../components/ui'
 import { etiqueta, fmtCompacto, fmtDec, fmtFechaHora, fmtNum } from '../lib/format'
 
@@ -64,7 +64,7 @@ export default function Dashboard() {
                   <XAxis type="number" tick={ejeTexto} tickFormatter={(v) => fmtCompacto(v)} axisLine={false} tickLine={false} />
                   <YAxis type="category" dataKey="distrito" width={130} tick={ejeTexto} axisLine={false} tickLine={false} />
                   <TooltipTema sufijo=" kg" />
-                  <Bar dataKey="kg" name="Kg rescatados" fill="var(--c1)" radius={[0, 6, 6, 0]} maxBarSize={22} />
+                  <Bar isAnimationActive={ANIMAR} dataKey="kg" name="Kg rescatados" fill="var(--c1)" radius={[0, 6, 6, 0]} maxBarSize={22} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -83,7 +83,7 @@ export default function Dashboard() {
               <div style={{ height: 210 }} role="img" aria-label="Gráfico circular de lotes por vencer por categoría">
                 <ResponsiveContainer>
                   <PieChart>
-                    <Pie data={porVencer} dataKey="lotes_por_vencer_5d" nameKey="categoria" innerRadius={58} outerRadius={90} paddingAngle={2} stroke="var(--surface)" strokeWidth={2}>
+                    <Pie isAnimationActive={ANIMAR} data={porVencer} dataKey="lotes_por_vencer_5d" nameKey="categoria" innerRadius={58} outerRadius={90} paddingAngle={2} stroke="var(--surface)" strokeWidth={2}>
                       {porVencer.map((_, i) => (
                         <Cell key={i} fill={COLORES[i % COLORES.length]} />
                       ))}

@@ -4,6 +4,9 @@ import { fmtNum } from '../lib/format'
 
 export const COLORES = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)', 'var(--c7)']
 
+/** Los gráficos no se animan si el usuario pidió reducir el movimiento (accesibilidad). */
+export const ANIMAR = typeof matchMedia === 'function' && !matchMedia('(prefers-reduced-motion: reduce)').matches
+
 export const ejeTexto = { fill: 'var(--muted)', fontSize: 12 }
 
 /** Tooltip que respeta el tema claro/oscuro. */
