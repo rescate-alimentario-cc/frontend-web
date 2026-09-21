@@ -16,7 +16,8 @@
       // Aplica el tema antes de pintar para evitar el destello claro/oscuro.
       try {
         var guardado = localStorage.getItem('tema')
-        var oscuro = guardado ? guardado === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches
+        var forzado = new URLSearchParams(location.search).get('tema') // ?tema=claro | ?tema=oscuro
+        var oscuro = forzado ? forzado === 'oscuro' : guardado ? guardado === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches
         document.documentElement.dataset.tema = oscuro ? 'oscuro' : 'claro'
       } catch (e) {}
     </script>
